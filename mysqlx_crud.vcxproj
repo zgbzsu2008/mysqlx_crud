@@ -151,6 +151,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
+    <None Include="menu.json" />
+    <None Include="widget.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="file_utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

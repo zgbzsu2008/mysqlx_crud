@@ -21,5 +21,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
+    <None Include="menu.json" />
+    <None Include="widget.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="file_utils.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
