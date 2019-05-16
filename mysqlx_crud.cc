@@ -51,7 +51,7 @@ int main(int argc)
     Schema sch = sess.getSchema(config.db, true);
     Collection coll = sch.createCollection("my_collection", true);
     coll.remove("true").execute();  // remove all
-
+    
     DocResult docs;
     DbDoc doc;
     Result res;
@@ -140,7 +140,7 @@ int main(int argc)
         cout << "\t-" << docs.fetchOne() << endl;
 
         cout << "-find all: " << endl;
-        docs = coll.find("name like :param").bind("param", "S%").execute();
+        docs = coll.find("name like :param").sort("age DESC").limit(2).bind("param", "S%").execute();
         while (DbDoc doc = docs.fetchOne()) {
           cout << "\t-" << doc << endl;
         }
@@ -170,7 +170,36 @@ int main(int argc)
 
         coll.modify("age==25").arrayInsert("name[1]", "456").execute();
       }
+
+      cout << "addOrReplaceOne: " << endl;
+      {
+        res = coll.addOrReplaceOne("custom_id", DbDoc(R"({ "abc": 25 })"));
+        cout << "affect count: " << res.getAffectedItemsCount() << endl;
+      }
+
+      cout << "getOne: " << endl;
+      {
+        res = coll.add(DbDoc(R"({ "abc": 25, "cd": 100 })")).execute();
+        std::vector<string> ids = res.getGeneratedIds();
+        std::cout << coll.getOne(ids[0]) << endl;
+      }
+
+      cout << "count: " << endl;
+      {
+        cout << coll.count() << endl;
+      }
     }
+
+    cout << "Session accepted, get table..." << endl;
+    Table table = sch.getTable("my_table");
+    table.remove().execute();
+
+    res = table.insert("name", "age").values("User", 28).values("Jack", 26).execute();
+    RowResult result = table.select().execute();
+    while (Row row = result.fetchOne()) {
+      cout << row << endl;
+    }
+
   } catch (const mysqlx::Error &err) {
     cout << "ERROR: " << err << endl;
     return 1;
